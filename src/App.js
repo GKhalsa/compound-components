@@ -1,28 +1,58 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
 
+
+class Tabs extends Component {
+
+    state = {
+        activeIndex: 0
+    };
+
+    changeActiveIndex = (index) => {
+        this.setState({activeIndex: index})
+    };
+
+    render(){
+        return (
+            <div className="tabs__container">
+
+                <div className="tabs">
+                    {this.props.data.map((data, index) => {
+                        return (
+                            <div className={this.state.activeIndex === index ? "tab active": "tab"} key={index} onClick={() => this.changeActiveIndex(index)}>
+                                {data.label}
+                            </div>
+                        )
+                    })}
+                </div>
+
+                <div className="tabs__content">
+                    {this.props.data[this.state.activeIndex].content}
+                </div>
+
+            </div>
+        )
+    }
+
+}
+
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+
+
+    render() {
+
+        const tabData = [
+            {label: "Food", content: "Burritos, Pizza, Kale"},
+            {label: "Drinks", content: "Topo Chico, Diet Coke"},
+            {label: "Best Friends", content: "Dan Abromov, Adele"}
+        ];
+
+        return (
+            <div className="App">
+                <Tabs data={tabData}/>
+            </div>
+        );
+    }
 }
 
 export default App;
