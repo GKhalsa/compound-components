@@ -44,7 +44,7 @@ class App extends Component {
         const tabData = [
             {label: "Food", content: "Burritos, Pizza, Kale"},
             {label: "Drinks", content: "Topo Chico, Diet Coke"},
-            {label: "Best Friends", content: "Dan Abromov, Adele"}
+            {label: "Best Friends", content: "Dan Abramov, Adele"}
         ];
 
         return (
