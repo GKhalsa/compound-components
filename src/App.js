@@ -83,7 +83,7 @@ class App extends Component {
                     <TabPanel>
                         <Panel>Burritos, Pizza, Kale</Panel>
                         <Panel>Topo Chico, Diet Coke</Panel>
-                        <Panel>Dan Abromov, Adele</Panel>
+                        <Panel>Dan Abramov, Adele</Panel>
                     </TabPanel>
                     
                 </Tabs>
