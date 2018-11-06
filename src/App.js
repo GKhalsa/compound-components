@@ -1,40 +1,7 @@
 import React, {Component, createContext} from 'react';
 import './App.css';
 
-
-// class Tabs extends Component {
-//
-//     state = {
-//         activeIndex: 0
-//     };
-//
-//     changeActiveIndex = (index) => {
-//         this.setState({activeIndex: index})
-//     };
-//
-//     render(){
-//         return (
-//             <div className="tabs__container">
-//
-//                 <div className="tabs">
-//                     {this.props.data.map((data, index) => {
-//                         return (
-//                             <div className={this.state.activeIndex === index ? "tab active": "tab"} key={index} onClick={() => this.changeActiveIndex(index)}>
-//                                 {data.label}
-//                             </div>
-//                         )
-//                     })}
-//                 </div>
-//
-//                 <div className="tabs__content">
-//                     {this.props.data[this.state.activeIndex].content}
-//                 </div>
-//
-//             </div>
-//         )
-//     }
-//
-// }
+const TabsContext = createContext();
 
 class Tabs extends Component {
 
@@ -43,34 +10,60 @@ class Tabs extends Component {
         changeActiveIndex: (activeIndex) => this.setState({activeIndex})
     };
 
-    render(){
-        return this.props.children
+    render() {
+        return (
+            <TabsContext.Provider value={this.state}>
+                <div className="tabs__container">
+                    {this.props.children}
+                </div>
+            </TabsContext.Provider>
+        )
     }
 }
 
-class TabList extends Component {
-    render(){
-        return this.props.children
-    }
-}
+const TabList = ({children}) => (
+    <div className="tabs">
+        <TabsContext.Consumer>
+            {
+                context => {
 
-class Tab extends Component {
-    render(){
-        return this.props.children
-    }
-}
+                    let clonedChildren = React.Children.map(children, (child, index) => {
+                        const isActive = index == context.activeIndex;
+                        return React.cloneElement(child, {
+                            isActive,
+                            onActivate: () => context.changeActiveIndex(index)
+                        })
+                    });
 
-class TabPanel extends Component {
-    render(){
-        return this.props.children
-    }
-}
+                    return clonedChildren
+                }
+            }
+        </TabsContext.Consumer>
+    </div>
+);
 
-class Panel extends  Component {
-    render(){
-        return this.props.children
-    }
-}
+const Tab = ({isDisabled, isActive, onActivate, children}) => (
+    <div onClick={isDisabled ? null : onActivate}
+         className={isDisabled ? "tab disabled" : isActive ? "tab active" : "tab"}>
+
+        {children}
+
+    </div>
+);
+
+
+const TabPanel = ({children}) => (
+    <div className="tabs__content">
+        <TabsContext.Consumer>
+            {context => {
+                return children[context.activeIndex]
+            }}
+        </TabsContext.Consumer>
+    </div>
+);
+
+const Panel = ({children}) => children;
+
 
 class App extends Component {
 
@@ -92,7 +85,7 @@ class App extends Component {
                         <Panel>Topo Chico, Diet Coke</Panel>
                         <Panel>Dan Abromov, Adele</Panel>
                     </TabPanel>
-
+                    
                 </Tabs>
             </div>
         );
